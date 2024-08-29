@@ -16,7 +16,8 @@ def get_emotion_reponse(text_to_analyse):
     }
 
     if(response.status_code == 200):
-        result["data"] = json.loads(response.text) 
+        detection_data = json.loads(response.text)
+        result["data"] = detection_data["emotionPredictions"][0]["emotion"]
     
     return result
 
@@ -31,7 +32,7 @@ def get_detector_response(emotions):
             if(emotions[key] > max_value):
                 max_value = emotions[key]
                 max_label = key
-        else
+        else:
             response[key] = None
 
     response["dominant_emotion"] = max_label
@@ -40,9 +41,7 @@ def get_detector_response(emotions):
 def emotion_detector(text_to_analyse):
     emotion_response = get_emotion_reponse(text_to_analyse)
     if(emotion_response["status_code"] == 200):
-        return get_detector_response(
-            emotion_response["emotionPredictions"][0]["emotion"]
-        )
+        return get_detector_response(emotion_response["data"])
         
     elif(emotion_response["status_code"] == 400):
         return get_detector_response({})

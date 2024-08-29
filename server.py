@@ -1,3 +1,6 @@
+"""
+    Runs the user web interface server for emotion detection
+"""
 from flask import Flask, render_template, request
 from EmotionDetection.emotion_detection import emotion_detector
 
@@ -8,6 +11,10 @@ def detect_emotion():
     """ detect emotion and respond back to the user """
     text_to_detect = request.args.get('textToAnalyze')
     result = emotion_detector(text_to_detect)
+
+    if(result is None or result['dominant_emotion'] is None):
+        return "Invalid text! Please try again!."
+
     return "For the given statement, the system response is "\
         f"'anger': {result['anger']}, 'disgust': {result['disgust']}, "\
         f"'fear': {result['fear']}, 'joy': {result['joy']} and "\
